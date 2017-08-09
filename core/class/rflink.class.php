@@ -495,7 +495,7 @@ public static function deamon_start() {
 
     $net = config::byKey('netGateway', 'rflink', 'none');
 
-    $url = network::getNetworkAccess('internal') . '/plugins/rflink/core/api/rflink.php?apikey=' . jeedom::getApiKey('rflink');
+    $url = network::getNetworkAccess('internal', 'proto:127.0.0.1:port:comp') . '/plugins/rflink/core/api/rflink.php?apikey=' . jeedom::getApiKey('rflink');
 
     $log = log::convertLogLevel(log::getLogLevel('rflink'));
 
