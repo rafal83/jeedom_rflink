@@ -16,6 +16,7 @@ process.argv.forEach(function(val, index, array) {
 		case 3 : gwAddress = val; break;
 		case 4 : gwNetwork = val; break;
 		case 5 : log = val; break;
+		case 6 : type = val; break;
 	}
 });
 
