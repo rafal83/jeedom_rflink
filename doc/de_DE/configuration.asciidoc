@@ -2,9 +2,9 @@
 
 Sur la page du plugin on peut :
 
-  * Voir la version actuelle du firmware de la gateway
+  * Sehen Sie die aktuelle Version der Firmware des Gateways
 
-  * Flasher et upgrader la version de firmware
+  * Flash und upgrade der Firmware-version
 
   * Configurer le port USB de la gateway ou indiquer si c'est une réseau
 
