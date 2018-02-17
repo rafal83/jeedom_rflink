@@ -276,6 +276,21 @@ class rflink extends eqLogic {
         $this->checkActOk($_value . $_cmd, $_value . ' ' . $_cmd, 'other', $_cmd, $_value, '0');
     }
 
+    public function registerDimmer($_cmd, $_value) {
+        //checkCmdOk($_id, $_name, $_subtype, $_value)
+        //checkActOk($_id, $_name, $_subtype, $_cmdid, $_request, $_maxslider)
+        if ($_cmd[0] == '0' && strlen($_cmd) > 1) {
+            //supp les 0 en début de switch
+            $_cmd = ltrim($_cmd, "0");
+            $_cmd = ($_cmd == '') ? '0' : $_cmd;
+        }
+        $binary = ($_value == 'OFF') ? '0' : '1';
+        $logicalCmdId = $_cmd . 'Level';
+        $this->checkCmdOk($logicalCmdId, 'Level ' . $_cmd, 'numeric', $_value);
+        $this->checkAndUpdateCmd($logicalCmdId, $_value);
+        //$this->checkActOk($_value . $logicalCmdId, $_value . ' ' . $logicalCmdId, 'other', $logicalCmdId, $_value, '0');
+    }
+
     public function registerBattery($_value) {
         $battery = ($_value == 'LOW') ? 10 : 100;
         $this->batteryStatus($battery);
@@ -398,7 +413,15 @@ class rflink extends eqLogic {
         if ($i > 3) {
             if (strpos($info,'=') !== false) {
                 $arg = explode("=", $info);
-                $args[$arg[0]] = $arg[1];
+
+                if(count($arg) > 2)
+                {
+                    // set_level cmd, CMD=SET_LEVEL=2
+                    $args[$arg[0]] = $arg[1] . '=' . $arg[2];
+                } else
+                {
+                    $args[$arg[0]] = $arg[1];
+                }
             }
         }
         $i++;
@@ -415,7 +438,13 @@ class rflink extends eqLogic {
                 $rflink->registerMilightv1($value,$args['CMD'],$args['RGBW']);
                 break;
                 default :
-                $rflink->registerSwitch($value,$args['CMD']);
+                if(strpos($args['CMD'], 'SET_LEVEL') !==false)
+                {
+                    $rflink->registerDimmer($value, str_replace('SET_LEVEL=', '', $args['CMD']));
+                } else 
+                {
+                    $rflink->registerSwitch($value,$args['CMD']);
+                }
                 //SWITCH=00;CMD=OFF
                 break;
             }
