@@ -206,7 +206,7 @@ class rflink extends eqLogic {
     public function registerRTS($_cmd, $_value) {
         //checkCmdOk($_id, $_name, $_subtype, $_value)
         //checkActOk($_id, $_name, $_subtype, $_cmdid, $_request, $_maxslider)
-        $this->checkCmdOk($_cmd, 'Statut ' . $_cmd, 'binary', $_value);
+        $this->checkCmdOk($_cmd, 'Statut ' . $_cmd, 'string', $_value);
         $this->checkAndUpdateCmd($_cmd, $_value);
         $this->checkActOk('PAIR' . $_cmd, 'Appairement ' . $_cmd, $_cmd, 'PAIR', '0');
         $this->checkActOk('UP' . $_cmd, 'Montée ' . $_cmd, $_cmd, 'UP', 'UP', '0');
