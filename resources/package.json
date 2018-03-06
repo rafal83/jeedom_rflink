@@ -1,0 +1,11 @@
+{
+  "name": "JeedomRflink",
+  "version": "0.0.1",
+  "description": "Node to use Rflink with Jeedom",
+  "license": "GPL-3.0",
+  "repository": "npm/npm",
+  "dependencies": {
+    "request": "latest",
+    "serialport": "4.0.7"
+  }
+}

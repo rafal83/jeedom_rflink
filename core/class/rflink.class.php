@@ -441,7 +441,7 @@ class rflink extends eqLogic {
                 if(strpos($args['CMD'], 'SET_LEVEL') !==false)
                 {
                     $rflink->registerDimmer($value, str_replace('SET_LEVEL=', '', $args['CMD']));
-                } else 
+                } else
                 {
                     $rflink->registerSwitch($value,$args['CMD']);
                 }
@@ -481,13 +481,13 @@ public static function saveInclude($mode) {
 
 public function preSave() {
     $this->setLogicalId($this->getConfiguration('protocol') . '_' . $this->getConfiguration('id'));
-  }
+}
 
 public static function deamon_info() {
     $return = array();
     $return['log'] = 'rflink_node';
     $return['state'] = 'nok';
-    $pid = trim( shell_exec ('ps ax | grep "rflink/node/rflink.js" | grep -v "grep" | wc -l') );
+    $pid = trim( shell_exec ('ps ax | grep "rflink/resources/rflink.js" | grep -v "grep" | wc -l') );
     if ($pid != '' && $pid != '0') {
         $return['state'] = 'ok';
     }
@@ -528,7 +528,7 @@ public static function deamon_start() {
 
     $log = log::convertLogLevel(log::getLogLevel('rflink'));
 
-    $sensor_path = realpath(dirname(__FILE__) . '/../../node');
+    $sensor_path = realpath(dirname(__FILE__) . '/../../resources');
     if ($usbGateway != "none") {
         exec('sudo chmod -R 777 ' . $usbGateway);
     }
@@ -563,25 +563,25 @@ public static function deamon_start() {
 }
 
 public static function deamon_stop() {
-    exec('kill $(ps aux | grep "rflink/node/rflink.js" | awk \'{print $2}\')');
+    exec('kill $(ps aux | grep "rflink/resources/rflink.js" | awk \'{print $2}\')');
     log::add('rflink', 'info', 'Arrêt du service rflink');
     $deamon_info = self::deamon_info();
     if ($deamon_info['state'] == 'ok') {
         sleep(1);
-        exec('kill -9 $(ps aux | grep "rflink/node/rflink.js" | awk \'{print $2}\')');
+        exec('kill -9 $(ps aux | grep "rflink/resources/rflink.js" | awk \'{print $2}\')');
     }
     $deamon_info = self::deamon_info();
     if ($deamon_info['state'] == 'ok') {
         sleep(1);
-        exec('sudo kill -9 $(ps aux | grep "rflink/node/rflink.js" | awk \'{print $2}\')');
+        exec('sudo kill -9 $(ps aux | grep "rflink/resources/rflink.js" | awk \'{print $2}\')');
     }
 }
 
 public static function dependancy_info() {
     $return = array();
     $return['log'] = 'rflink_dep';
-    $serialport = realpath(dirname(__FILE__) . '/../../node/node_modules/serialport');
-    $request = realpath(dirname(__FILE__) . '/../../node/node_modules/request');
+    $serialport = realpath(dirname(__FILE__) . '/../../resources/node_modules/serialport');
+    $request = realpath(dirname(__FILE__) . '/../../resources/node_modules/request');
     $return['progress_file'] = '/tmp/rflink_dep';
     if (is_dir($serialport) && is_dir($request)) {
         $return['state'] = 'ok';
@@ -594,7 +594,7 @@ public static function dependancy_info() {
 public static function dependancy_install() {
     log::add('rflink','info','Installation des dépéndances nodejs');
     $resource_path = realpath(dirname(__FILE__) . '/../../resources');
-    passthru('/bin/bash ' . $resource_path . '/nodejs.sh ' . $resource_path . ' > ' . log::getPathToLog('rflink_dep') . ' 2>&1 &');
+    passthru('/bin/bash ' . $resource_path . '/nodejs.sh ' . $resource_path . ' rflink > ' . log::getPathToLog('rflink_dep') . ' 2>&1 &');
 }
 
 }
@@ -658,25 +658,25 @@ class rflinkCmd extends cmd {
                     $eqLogic->getConfiguration('protocol') ,
                     $eqLogic->getConfiguration('id') ,
                     $id . ';' . $request );
-            } else {
-                rflink::sendToController(
-                    $eqLogic->getConfiguration('protocol') ,
-                    $eqLogic->getConfiguration('id') ,
-                    '0;ON' );
+                } else {
+                    rflink::sendToController(
+                        $eqLogic->getConfiguration('protocol') ,
+                        $eqLogic->getConfiguration('id') ,
+                        '0;ON' );
 
-                $id1 = dechex(hexdec($eqLogic->getConfiguration('id')) + 1);
+                        $id1 = dechex(hexdec($eqLogic->getConfiguration('id')) + 1);
 
-                rflink::sendToController(
-                    $eqLogic->getConfiguration('protocol') ,
-                    $id1 ,
-                    '0123;PAIR' );
+                        rflink::sendToController(
+                            $eqLogic->getConfiguration('protocol') ,
+                            $id1 ,
+                            '0123;PAIR' );
 
-                rflink::sendToController(
-                    $eqLogic->getConfiguration('protocol') ,
-                    $id1 ,
-                    '0123;0;PAIR' );
+                            rflink::sendToController(
+                                $eqLogic->getConfiguration('protocol') ,
+                                $id1 ,
+                                '0123;0;PAIR' );
+                            }
+                        }
+                        return true;
+                    }
                 }
-            }
-            return true;
-    }
-}
